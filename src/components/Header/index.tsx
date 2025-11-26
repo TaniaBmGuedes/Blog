@@ -2,8 +2,6 @@
 import clsx from "clsx";
 
 export function Header() {
-  console.log("HEADER");
-
   return (
     <h1
       className={clsx(
