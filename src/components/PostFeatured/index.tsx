@@ -1,5 +1,5 @@
 import { PostCoverImage } from "../PostCoverImage";
-import { PostHeading } from "../PostHeading";
+import { PostSummary } from "../PostSummary";
 
 export default function PostFeatured() {
   const slug = "qualquer";
@@ -19,23 +19,14 @@ export default function PostFeatured() {
             priority: true,
           }}
         />
-        <div className="flex flex-col gap-4 sm:justify-center">
-          <time
-            className="text-slate-600 block text-sm/tight"
-            dateTime="26-11-2025 13:09"
-          >
-            26-11-2025
-          </time>
-          <PostHeading as="h1" url={postLink}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. In velit
-          </PostHeading>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. In velit
-            dolorem est dolor porro, doloribus neque, quidem mollitia
-            doloremque, ad perspiciatis fugiat. Rerum, vel ex? Impedit ullam
-            harum blanditiis mollitia?
-          </p>
-        </div>
+
+        <PostSummary
+          postLink={postLink}
+          postHeading="h2"
+          createdAt={"11-11-1111"}
+          excerpt={"oi"}
+          title={"oi"}
+        />
       </section>
     </>
   );

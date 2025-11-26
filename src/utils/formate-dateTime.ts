@@ -3,7 +3,7 @@ import { pt } from "date-fns/locale";
 
 export function formatDateTime(rawDate: string) {
   const date = new Date(rawDate);
-  return format(date, "dd/mm/yyyy 'at HH'h'mm", {
+  return format(date, "dd/MM/yyyy 'at' HH'h'mm", {
     locale: pt,
   });
 }
