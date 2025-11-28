@@ -1,12 +1,13 @@
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const postsTable = sqliteTable("posts", {
+export const postsTable = sqliteTable("post", {
   id: text("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
   author: text("author").notNull(),
   excerpt: text("excerpt").notNull(),
+  alt: text("alt").notNull(),
   content: text("content").notNull(),
   coverImageUrl: text("cover_image_url").notNull(),
   published: integer("published", { mode: "boolean" }).notNull(),
