@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "github:tailwindcss/typography",
+    "@uiw/react-md-editor": "^4.0.9",
     "better-sqlite3": "^12.4.6",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
