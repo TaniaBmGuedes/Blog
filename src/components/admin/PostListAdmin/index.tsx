@@ -1,7 +1,7 @@
 import { findAllPostsAdmin } from "@/lib/post/queries/admin";
 import clsx from "clsx";
 import Link from "next/link";
-import { DeletePostButton } from "../admin/DeleteButtonPost";
+import { DeletePostButton } from "../DeleteButtonPost";
 
 export default async function PostsListAdmin() {
   const posts = await findAllPostsAdmin();
@@ -22,7 +22,7 @@ export default async function PostsListAdmin() {
 
             {!post.published && (
               <span className="text-xs text-slate-600 italic">
-                (Não publicado)
+                (Not published)
               </span>
             )}
 

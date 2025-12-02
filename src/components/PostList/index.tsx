@@ -1,9 +1,16 @@
+import ErrorMesssage from "../ErrorMessage";
 import { PostCoverImage } from "../PostCoverImage";
 import { PostSummary } from "../PostSummary";
 import { findAllPublicPostsCachedPublic } from "@/lib/post/queries/public";
 
 export async function PostList() {
   const posts = await findAllPublicPostsCachedPublic();
+
+  if (posts.length <= 0) {
+    return (
+      <ErrorMesssage contentTitle="HEY 😅" content="Let's create a post" />
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 mb-16  gap-8 sm:grid-cols-2 lg:grid-cols-3">
