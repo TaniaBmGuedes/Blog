@@ -3,31 +3,50 @@ import { useId } from "react";
 
 type InputTextProps = {
   labelText?: string;
+  helperText?: string;
+  error?: string;
 } & React.ComponentProps<"input">;
-export function InputText({ labelText = "", ...props }: InputTextProps) {
+
+export function InputText({
+  labelText = "",
+  helperText,
+  error,
+  className,
+  ...props
+}: InputTextProps) {
   const id = useId();
+
   return (
-    <div>
+    <div className="flex flex-col gap-1.5 w-full">
       {labelText && (
-        <label className="text-sm" htmlFor={id}>
+        <label
+          htmlFor={id}
+          className="text-sm font-medium text-gray-700 tracking-tight"
+        >
           {labelText}
         </label>
       )}
+
       <input
         {...props}
-        className={clsx(
-          "bg-white outline-0 text-base/tight",
-          "ring-2 ring-slate-400 rounded",
-          "p-2 transition focus:ring-blue-600",
-          "placeholder-slate-300",
-          "disabled:bg-slate-200",
-          "disabled:text-slate-400",
-          "disabled:placeholder-slate-300",
-          "read-only:bg-slate-100",
-          props.className
-        )}
         id={id}
+        className={clsx(
+          "w-full px-3 py-2 rounded-md text-sm transition-all",
+          "border border-gray-300 bg-white shadow-sm",
+          "focus:border-blue-500 focus:ring-4 focus:ring-blue-100",
+          "placeholder:text-gray-400",
+          "disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200",
+          "read-only:bg-gray-100 read-only:text-gray-500",
+          error && "border-red-500 focus:border-red-500 focus:ring-red-100",
+          className
+        )}
       />
+
+      {error && <p className="text-xs text-red-600">{error}</p>}
+
+      {!error && helperText && (
+        <p className="text-xs text-gray-500">{helperText}</p>
+      )}
     </div>
   );
 }
