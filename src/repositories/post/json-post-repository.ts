@@ -2,7 +2,6 @@ import { PostModel } from "@/models/post/post-model";
 import { PostRepository } from "./post-repository";
 import { resolve } from "path";
 import { readFile, writeFile } from "fs/promises";
-import { SIMULATE_WAIT_IN_MS } from "@/lib/constants";
 
 const ROOT_DIR = process.cwd();
 const JSON_POST_FILE_PATH = resolve(
@@ -13,12 +12,14 @@ const JSON_POST_FILE_PATH = resolve(
   "posts.json"
 );
 
+const simulateWaiInMs = Number(process.env.SIMULATE_WAIT_IN_MS);
+
 export class JsonPostRepository implements PostRepository {
   private async simulateWait() {
-    if (SIMULATE_WAIT_IN_MS <= 0) {
+    if (simulateWaiInMs <= 0) {
       return;
     }
-    await new Promise((resolve) => setTimeout(resolve, SIMULATE_WAIT_IN_MS));
+    await new Promise((resolve) => setTimeout(resolve, simulateWaiInMs));
   }
   private async readFromDisk(): Promise<PostModel[]> {
     const jsonContent = await readFile(JSON_POST_FILE_PATH, "utf-8");
@@ -70,7 +71,7 @@ export class JsonPostRepository implements PostRepository {
     );
 
     if (idOrSlugExist) {
-      throw new Error("ID or Slug devmust be unique");
+      throw new Error("ID or Slug must be unique");
     }
 
     posts.push(post);
