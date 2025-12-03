@@ -11,7 +11,7 @@ import { revalidateTag } from "next/cache";
 export async function deletePostAction(id: string) {
   //TODO: check user login
   await asyncDelay(2000);
-  logColor("" + id);
+  logColor(String(id));
 
   if (!id || typeof id !== "string") {
     return {
@@ -27,7 +27,14 @@ export async function deletePostAction(id: string) {
     };
   }
 
-  await drizzleDb.delete(postsTable).where(eq(postsTable.id, id));
+  try {
+    await drizzleDb.delete(postsTable).where(eq(postsTable.id, id));
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error ? error.message : "An unexpected error occurred",
+    };
+  }
 
   revalidateTag("posts", "");
   revalidateTag(`post-${post.slug}`, "");

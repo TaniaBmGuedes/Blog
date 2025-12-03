@@ -1,7 +1,7 @@
 import { PostModel } from "@/models/post/post-model";
 import { PostRepository } from "./post-repository";
 import { resolve } from "path";
-import { readFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
 import { SIMULATE_WAIT_IN_MS } from "@/lib/constants";
 
 const ROOT_DIR = process.cwd();
@@ -56,5 +56,67 @@ export class JsonPostRepository implements PostRepository {
     const posts = await this.readFromDisk();
     console.log("\n", this.findAll, "\n");
     return posts;
+  }
+
+  async createPost(post: PostModel): Promise<PostModel> {
+    const posts = await this.findAll();
+
+    if (!post.id || !post.slug) {
+      throw new Error("Post without ID or Slug");
+    }
+
+    const idOrSlugExist = posts.find(
+      (savedPost) => savedPost.id === post.id || savedPost.slug === post.slug
+    );
+
+    if (idOrSlugExist) {
+      throw new Error("ID or Slug devmust be unique");
+    }
+
+    posts.push(post);
+    await this.writeToDisk(posts);
+
+    return post;
+  }
+
+  async deletePost(id: string): Promise<PostModel> {
+    const posts = await this.findAll();
+    const postIndex = posts.findIndex((p) => p.id === id);
+
+    if (postIndex < 0) {
+      throw new Error("Post does not exist");
+    }
+
+    const post = posts[postIndex];
+    posts.splice(postIndex, 1);
+    await this.writeToDisk(posts);
+
+    return post;
+  }
+
+  async updatePost(
+    id: string,
+    newPostData: Omit<PostModel, "id" | "slug" | "createdAt" | "updatedAt">
+  ): Promise<PostModel> {
+    const posts = await this.findAll();
+    const postIndex = posts.findIndex((p) => p.id === id);
+    const savedPost = posts[postIndex];
+
+    if (postIndex < 0) {
+      throw new Error("Post does not exist");
+    }
+
+    const newPost = {
+      ...savedPost,
+      ...newPostData,
+      updatedAt: new Date().toISOString(),
+    };
+    posts[postIndex] = newPost;
+    await this.writeToDisk(posts);
+    return newPost;
+  }
+  private async writeToDisk(posts: PostModel[]): Promise<void> {
+    const jsonToString = JSON.stringify({ posts }, null, 2);
+    await writeFile(JSON_POST_FILE_PATH, jsonToString, "utf-8");
   }
 }
