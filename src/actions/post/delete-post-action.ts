@@ -2,6 +2,7 @@
 
 import { drizzleDb } from "@/db/drizzle";
 import { postsTable } from "@/db/drizzle/schema";
+import { verifyLoginSession } from "@/lib/login/manage-login";
 import { postRepository } from "@/repositories/post";
 import { asyncDelay } from "@/utils/async-delay";
 import { logColor } from "@/utils/log-color";
@@ -16,6 +17,13 @@ export async function deletePostAction(id: string) {
   if (!id || typeof id !== "string") {
     return {
       error: "Invalid data",
+    };
+  }
+  const isAuthenticated = await verifyLoginSession();
+
+  if (!isAuthenticated) {
+    return {
+      error: "Do login again in another tab",
     };
   }
 

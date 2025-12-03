@@ -1,6 +1,7 @@
 "use server";
 
 import { makePublicPost, PublicPost } from "@/app/admin/post/dto/post/dto";
+import { verifyLoginSession } from "@/lib/login/manage-login";
 import { PostCreateSchema } from "@/lib/post/validation";
 import { PostModel } from "@/models/post/post-model";
 import { postRepository } from "@/repositories/post";
@@ -26,9 +27,17 @@ export async function createPostAction(
       errors: ["Invalid data"],
     };
   }
+  const isAuthenticated = await verifyLoginSession();
 
   const formDataToObj = Object.fromEntries(formData.entries());
   const zodParsedObj = PostCreateSchema.safeParse(formDataToObj);
+
+  if (!isAuthenticated) {
+    return {
+      formState: makePublicPost(formDataToObj),
+      errors: ["Do login again before save"],
+    };
+  }
 
   if (!zodParsedObj.success) {
     const errors = getZodErrorMessages(zodParsedObj.error.format());

@@ -8,6 +8,7 @@ import { PostModel } from "@/models/post/post-model";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { makeRandomString } from "@/utils/make-random-string";
+import { verifyLoginSession } from "@/lib/login/manage-login";
 
 type UpdatePostActionState = {
   formState: PublicPost;
@@ -19,12 +20,12 @@ export async function updatePostAction(
   prevState: UpdatePostActionState,
   formData: FormData
 ): Promise<UpdatePostActionState> {
-  // TODO: verificar se o usuário tá logado
+  const isAuthenticated = await verifyLoginSession();
 
   if (!(formData instanceof FormData)) {
     return {
       formState: prevState.formState,
-      errors: ["Dados inválidos"],
+      errors: ["Invalid data"],
     };
   }
 
@@ -33,12 +34,19 @@ export async function updatePostAction(
   if (!id || typeof id !== "string") {
     return {
       formState: prevState.formState,
-      errors: ["ID inválido"],
+      errors: ["Invalid ID"],
     };
   }
 
   const formDataToObj = Object.fromEntries(formData.entries());
   const zodParsedObj = PostUpdateSchema.safeParse(formDataToObj);
+
+  if (!isAuthenticated) {
+    return {
+      formState: makePublicPost(formDataToObj),
+      errors: ["Do login before save in another tab."],
+    };
+  }
 
   if (!zodParsedObj.success) {
     const errors = getZodErrorMessages(zodParsedObj.error.format());
@@ -67,14 +75,14 @@ export async function updatePostAction(
 
     return {
       formState: makePublicPost(formDataToObj),
-      errors: ["Erro desconhecido"],
+      errors: ["Unknow error"],
     };
   }
 
   if (!post) {
     return {
       formState: makePublicPost(formDataToObj),
-      errors: ["Erro desconhecido"],
+      errors: ["Unknow error"],
     };
   }
 
