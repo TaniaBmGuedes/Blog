@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const shouldRedirect = shouldBeAuthenticated && isGetRequest;
 
   if (!shouldRedirect) {
-    return NextResponse.next();
+    return NextResponse.next(); //sigo para requisao
   }
 
   const jwtSession = request.cookies.get(
