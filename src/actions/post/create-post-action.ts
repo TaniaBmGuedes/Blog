@@ -40,7 +40,7 @@ export async function createPostAction(
   }
 
   if (!zodParsedObj.success) {
-    const errors = getZodErrorMessages(zodParsedObj.error.format());
+    const errors = getZodErrorMessages(zodParsedObj.error);
 
     const mergedFormState = makePublicPost({
       ...prevState.formState,

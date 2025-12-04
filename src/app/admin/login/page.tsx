@@ -7,8 +7,9 @@ export const metadata: Metadata = {
   title: "Login",
 };
 export default async function AdminLoginPage() {
-  const allowLoginEnv = (process.env.ALLOW_LOGIN ?? "").trim();
-  const allowLogin = allowLoginEnv === "" ? true : Boolean(Number(allowLoginEnv));
+  const allowLoginEnv = (process.env.ALLOW_LOGIN ?? "").trim().toLowerCase();
+  const allowLogin =
+    allowLoginEnv === "" || allowLoginEnv === "1" || allowLoginEnv === "true";
 
   if (!allowLogin) {
     return (

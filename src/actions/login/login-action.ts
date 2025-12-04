@@ -10,8 +10,9 @@ type LoginActionState = {
 };
 
 export async function loginAction(state: LoginActionState, formData: FormData) {
-  const allowLoginEnv = (process.env.ALLOW_LOGIN ?? "").trim();
-  const allowLogin = allowLoginEnv === "" ? true : Boolean(Number(allowLoginEnv));
+  const allowLoginEnv = (process.env.ALLOW_LOGIN ?? "").trim().toLowerCase();
+  const allowLogin =
+    allowLoginEnv === "" || allowLoginEnv === "1" || allowLoginEnv === "true";
 
   if (!allowLogin) {
     return {

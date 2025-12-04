@@ -49,7 +49,7 @@ export async function updatePostAction(
   }
 
   if (!zodParsedObj.success) {
-    const errors = getZodErrorMessages(zodParsedObj.error.format());
+    const errors = getZodErrorMessages(zodParsedObj.error);
     return {
       errors,
       formState: makePublicPost(formDataToObj),
